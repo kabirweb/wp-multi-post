@@ -22,7 +22,7 @@ WP Multi Post is a wordpress plugin, which make your multi post creation experie
 Up to ten(10) posts.
 
 == Screenshots ==
-screenshot.jpeg
+1. WP Multi Post
 
 == Changelog ==
 No changes yet
