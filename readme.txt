@@ -19,7 +19,7 @@ WP Multi Post is a wordpress plugin, which make your multi post creation experie
 
 == Frequently asked questions ==
 = How many posts we can create at a time? =
-Up to ten(15) posts.
+Up to fifteen(15) posts.
 
 == Screenshots ==
 1. Back End
