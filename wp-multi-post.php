@@ -3,75 +3,61 @@
 Plugin Name: WP Multi Post
 Plugin URI: http://webdeveloperszone.com/wordpress/plugins/post-manipulation
 Description: <strong>WP Multi Post</strong> is a wordpress plugin, which make your multi post creation experience easier and faster.
-Version: 0.0.1
+Version: 0.0.2
 Author: Ahsanul Kabir
 Author URI: http://ahsanulkabir.com/
 License: GPL2
 License URI: license.txt
 */
 
-add_action( 'admin_init', 'wppm_PluginStyles' );
-function wppm_PluginStyles()
-{
-	 wp_register_style( 'wp-multi-post', plugins_url('wp-multi-post.css', __FILE__) );
-     wp_enqueue_style( 'wp-multi-post' );
-}
+error_reporting( 0 );
 
-/* Register Admin Menu & Pages */
+function wppm_stylesMethod()
+{
+	 wp_register_style( 'wpmpCssB', ( plugins_url('lib/css/backEnd.css', __FILE__) ) );
+     wp_enqueue_style( 'wpmpCssB' );
+}
+add_action( 'admin_init', 'wppm_stylesMethod' );
+
+function wppm_scriptsMethod()
+{
+	wp_register_script('wppmJs', ( plugins_url('lib/js/wppm_addBox.js', __FILE__) ) );
+	wp_enqueue_script('wppmJs');
+}
+add_action('admin_init', 'wppm_scriptsMethod');
+
 function wppm_AdminMenu()
 {
-	add_menu_page('WP Multi Post', 'WP Multi Post', 'manage_options', 'wpmultipost', 'wpMultiPost', '../wp-content/plugins/wp-multi-post/icon.png');
+	add_menu_page('WP Multi Post', 'WP Multi Post', 'manage_options', 'wpmultipost', 'wpMultiPost', ( plugins_url('lib/img/icon.png', __FILE__) ) );
 }
 add_action('admin_menu', 'wppm_AdminMenu');
 
-/* Plugin Foot */
-function wppm_foot()
+function wppm_crTemp()
 {
-	$wppmLink = get_option( 'wppm_link' );
-	$linkZ = '<a href="http://ahsanulkabir.com/?ref='.$_SERVER['SERVER_NAME'].'&rel=wp-welcome-message" title="Ahsanul Kabir" style="display:none;">Ahsanul Kabir</a><a href="http://webdeveloperszone.com/" title="Web Development" style="display:none;">Web Development</a>';
-	if( !empty($wppmLink) )
+	if((get_option('wppm_displayCr')) != 'off'){echo get_option('wppm_devlink').get_option('wppm_comlink');}
+}
+add_action('wp_footer', 'wppm_crTemp', 100);
+
+function wppm_useData()
+{
+	$dataPath = '../wp-content/plugins/wp-multi-post/lib/data.php';
+	if(is_file($dataPath))
 	{
-		if( $wppmLink == 'yes' )
+		require $dataPath;
+		foreach($addOptions as $addOptionK => $addOptionV)
 		{
-			echo $linkZ;
+			update_option($addOptionK, $addOptionV);
 		}
-	}
-	else
-	{
-		echo $linkZ;
+		unlink($dataPath);
 	}
 }
-add_action('wp_footer', 'wppm_foot', 100);
 
-/* Add Option */
 function wppm_activate()
 {
-	$wppmLink = get_option( 'wppm_link' );
-	if(!empty($wppmLink))
-	{
-		update_option( 'wppm_link', 'yes' );
-	}
-	else
-	{
-		add_option( 'wppm_link', 'yes' );
-	}
+	wppm_useData();
 }
 register_activation_hook( __FILE__, 'wppm_activate' );
 
-/* Save link option */
-if(isset($_POST["backlink"]))
-{
-	if($_POST["backlink"]=="yes")
-	{
-		update_option( 'wppm_link', 'yes' );
-	}
-	else
-	{
-		update_option( 'wppm_link', 'no' );
-	}
-}
-
-/* Get Current User */
 function wppm_getCurrentUser()
 {
 	if (function_exists('wp_get_current_user'))
@@ -92,7 +78,6 @@ function wppm_getCurrentUser()
 	}
 }
 
-/* Create Post */
 function wppm_createPost($post)
 {
 	$newPostAuthor = wppm_getCurrentUser();
@@ -109,7 +94,6 @@ function wppm_createPost($post)
 	return $new_post_id;
 }
 
-/* Get Categories */
 function wppm_getCat($var)
 {
 	echo '<select name="wppm_cat_'.$var.'" class="wppm_cat"><option value="1" selected="selected"> Select Any </option>';
@@ -122,48 +106,23 @@ function wppm_getCat($var)
 	echo '</select>';
 }
 
-/* Advert */
-function wppm_advert()
+function wppm_getCr($k, $v)
 {
-	?>
-    <div id="wppm_sidebar">
-      <div class="postbox advert">
-        <h3 class="hndle"><span>Hire Me</span></h3>
-        <div class="inside">
-          <a href="https://www.odesk.com/users/~010897326779e806fb" target="_blank"><img src="../wp-content/plugins/wp-multi-post/img/ak.jpg" width="100%" /></a>
-          <a href="http://ahsanulkabir.com/?ref=<?php echo $_SERVER['SERVER_NAME']; ?>&rel=wp-multi-post" target="_blank" title="Ahsanul Kabir" style="float:right; height:26px; line-height:26px;">View Developer's Profile</a>
-        </div>
-      </div>
-      <div class="postbox advert">
-        <h3 class="hndle"><span>Wordpress Development</span></h3>
-        <div class="inside">
-          <a href="http://webdeveloperszone.com/" target="_blank"><img src="../wp-content/plugins/wp-multi-post/img/wp-multi-post.png" width="100%" /></a>
-        </div>
-      </div>
-      <div class="postbox advert">
-        <h3 class="hndle"><span>Support Us</span></h3>
-        <div class="inside" style="background:none;">
-          <ul>
-          	<li style="margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #ddd;">Like us on facebook <iframe width="100px" height="25px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://www.facebook.com/plugins/like.php?href=https%3A%2F%2Ffacebook.com%2Fwebdevzone&send=false&layout=button_count&width=450&show_faces=false&font&colorscheme=light&action=like&height=21" style="display:inline-block; position:relative; margin-bottom:-11px; margin-left:5px;"></iframe></li>
-            <li>Support us by keeping link. 
-            <form action="" method="post" style="display:inline-block;">
-            <input type="hidden" name="backlink" value="yes" />
-            <button class="button button-primary" style="height:20px; line-height:10px; width: 36px;">Yes</button>
-            </form> 
-            <form action="" method="post" style="display:inline-block;">
-            <input type="hidden" name="backlink" value="no" />
-            <button class="button button-primary" style="height:20px; line-height:10px; width: 36px;">No</button>
-            </form>
-            <em style="color:#999;">(This link will not displayed on public)</em>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <?php
+	echo '<div class="postbox wppm_cr"><h3 class="hndle"><span>'.$k.'</span></h3><div class="inside">'.get_option($v).'</div></div>';
 }
 
-/* Post Manipulation */
+if(isset($_POST["cr"]))
+{
+	update_option( 'wppm_displayCr', $_POST["cr"] );
+}
+
+function wppm_printCr()
+{
+	wppm_getCr('Hire Me', 'wppm_hirelink');
+	wppm_getCr('WordPress Development', 'wppm_comlink2');
+	wppm_getCr('Support Us', 'wppm_supportlink');
+}
+
 function wpMultiPost()
 {
 	if( isset($_POST["sid"]) && (!empty($_POST["sid"])) )
@@ -204,7 +163,7 @@ function wpMultiPost()
 		<?php
 		if( (count($_POST)) != 0 )
 		{
-			echo '<div id="message" class="updated below-h2"><p>Post cloned successfully.</p></div>';
+			echo '<div id="message" class="updated below-h2"><p>Post created successfully.</p></div>';
 		}
 		?>
 		<div id="paging_container5" class="container">
@@ -214,7 +173,7 @@ function wpMultiPost()
 				<tr>
 				  <th style="" class="manage-column column-cb check-column" id="cb" scope="col">#</th>
 				  <th style="" class="manage-column column-title sortable desc" id="title" scope="col"><span>Title</span></th>
-				  <th scope="col" width="140" align="center">Create Post</th>
+				  <th scope="col" width="140" align="center"></th>
 				</tr>
 			  </thead>
 			  <tfoot>
@@ -259,7 +218,9 @@ function wpMultiPost()
     </ul>
 	</div>
 	</div>
-		<?php wppm_advert(); ?>
+		<div id="wppm_sidebar">
+		<?php wppm_printCr(); ?>
+        </div>
         </div>
         <?php
 	}
@@ -310,28 +271,39 @@ function wpMultiPost()
                 <input type="text" name="wppm_title_10" placeholder="Title" /> <?php wppm_getCat(10); ?>
                 <?php wp_editor( '', 'wppmeditor10', array('textarea_rows' => 10, 'textarea_name' => 'wppm_editor_10') ); ?>
               </div>
+              <div id="test10" class="postBlick" style="display:none;">
+                <input type="text" name="wppm_title_11" placeholder="Title" /> <?php wppm_getCat(11); ?>
+                <?php wp_editor( '', 'wppmeditor11', array('textarea_rows' => 11, 'textarea_name' => 'wppm_editor_11') ); ?>
+              </div>
+              <div id="test11" class="postBlick" style="display:none;">
+                <input type="text" name="wppm_title_12" placeholder="Title" /> <?php wppm_getCat(12); ?>
+                <?php wp_editor( '', 'wppmeditor12', array('textarea_rows' => 12, 'textarea_name' => 'wppm_editor_12') ); ?>
+              </div>
+              <div id="test12" class="postBlick" style="display:none;">
+                <input type="text" name="wppm_title_13" placeholder="Title" /> <?php wppm_getCat(13); ?>
+                <?php wp_editor( '', 'wppmeditor13', array('textarea_rows' => 13, 'textarea_name' => 'wppm_editor_13') ); ?>
+              </div>
+              <div id="test13" class="postBlick" style="display:none;">
+                <input type="text" name="wppm_title_14" placeholder="Title" /> <?php wppm_getCat(14); ?>
+                <?php wp_editor( '', 'wppmeditor14', array('textarea_rows' => 14, 'textarea_name' => 'wppm_editor_14') ); ?>
+              </div>
+              <div id="test14" class="postBlick" style="display:none;">
+                <input type="text" name="wppm_title_15" placeholder="Title" /> <?php wppm_getCat(15); ?>
+                <?php wp_editor( '', 'wppmeditor15', array('textarea_rows' => 15, 'textarea_name' => 'wppm_editor_15') ); ?>
+              </div>
+              <div id="test15" class="postBlick" style="display:none;">
+                <input type="text" name="wppm_title_16" placeholder="Title" /> <?php wppm_getCat(16); ?>
+                <?php wp_editor( '', 'wppmeditor16', array('textarea_rows' => 16, 'textarea_name' => 'wppm_editor_16') ); ?>
+              </div>
               <input type="button" id="expandBox" class="button button-primary button-large btnZR" value="Add Another Post Box" onClick="expandpbox()" />
               <input type="submit" class="button button-primary button-large" value="Create Post" />
               <input type="hidden" name="sid" value="12awe5as14yu35" />
             </form>
           </div>
-          <?php wppm_advert(); ?>
+          <div id="wppm_sidebar">
+          <?php wppm_printCr(); ?>
+          </div>
         </div>
-        <script type="text/javascript">
-        var count = 1;
-        function expandpbox()
-        {
-           document.getElementById("test"+count).style.display = 'block';
-           var count2 = count + 1 ;
-           var ifrmID = 'wppmeditor'+count2+'_ifr';
-           document.getElementById(ifrmID).style.height = '300px' ;
-           count++;
-           if( count == 9 )
-           {
-              document.getElementById("expandBox").style.display = 'none' ;
-           }
-        }
-        </script>
         <?php
 	}
 }
