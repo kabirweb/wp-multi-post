@@ -1,10 +1,10 @@
 ﻿=== WP Multi Post ===
 Contributors: kabirweb
 Donate link: http://www.webdeveloperszone.com/crd/donate.php
-Tags: multi post, easy post
-Requires at least: 3.4.2
+Tags: multi post, easy post.
+Requires at least: 3.3
 Tested up to: 3.5.2
-Stable tag: 0.0.1
+Stable tag: 0.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,13 +19,16 @@ WP Multi Post is a wordpress plugin, which make your multi post creation experie
 
 == Frequently asked questions ==
 = How many posts we can create at a time? =
-Up to ten(10) posts.
+Up to ten(15) posts.
 
 == Screenshots ==
-1. WP Multi Post
+1. Back End
 
 == Changelog ==
-No changes yet
+1. Fix few css issue.
+2. Increase post limit.
+3. Cut of another few kb space/size.
+4. Add a Screenshot.
 
 == Upgrade notice ==
 No upgrade yet
