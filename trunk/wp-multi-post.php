@@ -12,6 +12,13 @@ License URI: license.txt
 
 error_reporting( 0 );
 
+function wppm_stylesMethod2()
+{
+	 wp_register_style( 'wpmpCssF', ( plugins_url('lib/css/frontEnd.css', __FILE__) ) );
+     wp_enqueue_style( 'wpmpCssF' );
+}
+add_action( 'wp_enqueue_scripts', 'wppm_stylesMethod2' );
+
 function wppm_stylesMethod()
 {
 	 wp_register_style( 'wpmpCssB', ( plugins_url('lib/css/backEnd.css', __FILE__) ) );
