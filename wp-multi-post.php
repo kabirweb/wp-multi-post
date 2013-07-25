@@ -3,7 +3,7 @@
 Plugin Name: WP Multi Post
 Plugin URI: http://webdeveloperszone.com/wordpress/plugins/post-manipulation
 Description: <strong>WP Multi Post</strong> is a wordpress plugin, which make your multi post creation experience easier and faster.
-Version: 0.0.2
+Version: 0.0.3
 Author: Ahsanul Kabir
 Author URI: http://ahsanulkabir.com/
 License: GPL2
